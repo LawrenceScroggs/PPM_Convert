@@ -1,4 +1,7 @@
 #pragma once
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
 
 //ASCII LUMINANCE RAMP
 #define ASCII_MAP_STRING "    ...''`^\",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%BB@@@$$$$"

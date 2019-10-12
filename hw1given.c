@@ -1,7 +1,4 @@
 #include "hw1given.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
 
 const Pixel ANSI_COLORS[NUM_ANSI_COLORS] = {
 	{0,0,255},
