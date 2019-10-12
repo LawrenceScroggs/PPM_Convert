@@ -24,6 +24,8 @@ typedef struct Pixel
 	unsigned char Red;
 	unsigned char Green;
 	unsigned char Blue;
+
+  unsigned int avg;
 } Pixel;
 
 //THIS ARRAY OF PIXELS SPECIFIES EACH OF THE COLORS AVAILABLE IN ANSI. EACH COLOR IS INDEXED BY ENUM ANSI_COLOR ABOVE

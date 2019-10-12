@@ -19,10 +19,7 @@ int main(int argc, char * argv[]){
   char buffer[250];
   FILE * fptr = fopen("IMG_7331_asc.ppm","rb");
 
-  int x,y;
-
-  x = 0;
-  y = x;
+  unsigned int x,y,color_val;
 
   if(!fptr)
     exit(1);
@@ -46,20 +43,56 @@ int main(int argc, char * argv[]){
   pix_array = (Pixel**)malloc(sizeof(Pixel*)*x);
   for(int i = 0;i < x;++i)
     pix_array[i] = (Pixel*)malloc(sizeof(Pixel)*y);
-  
 
-  for(int i = 0;i < x;++i){
-    for(int j = 0;j < y;++j){
-      fgets(buffer,sizeof(buffer),fptr);
-      pix_array[i][j].Red = buffer[0];
-      fgets(buffer,sizeof(buffer),fptr);
-      pix_array[i][j].Green = buffer[0];
-      fgets(buffer,sizeof(buffer),fptr);
-      pix_array[i][j].Blue = buffer[0];
+  fgets(buffer,sizeof(buffer),fptr); // line 4
+  color_val = strtol(buffer,NULL,10);  // gets color value
+  printf("Color Value: %d\n",color_val);
+
+  if(strncmp(file_type,"P3",2)== 0){
+    printf("ASCII Array \n");
+    for(int i = 0;i < x;++i){
+      for(int j = 0;j < y;++j){
+        fgets(buffer,sizeof(buffer),fptr);
+        pix_array[i][j].Red = strtol(buffer,NULL,10);
+        fgets(buffer,sizeof(buffer),fptr);
+        pix_array[i][j].Green = strtol(buffer,NULL,10);
+        fgets(buffer,sizeof(buffer),fptr);
+        pix_array[i][j].Blue = strtol(buffer,NULL,10);
+        pix_array[i][j].avg = ((pix_array[i][j].Red+pix_array[i][j].Blue+pix_array[i][j].Green)/3); 
+      }
     }
   }
+/*  else if(strncmp(file_type,"P6",2)== 0){
+     printf("Binary Array \n");
+     for(int i = 0;i < x;++i){
+      for(int j = 0;j < y;++j){
+        fgets(buffer,sizeof(buffer),fptr);
+        pix_array[i][j].Red = buffer[0];
+        fgets(buffer,sizeof(buffer),fptr);
+        pix_array[i][j].Green = buffer[0];
+        fgets(buffer,sizeof(buffer),fptr);
+        pix_array[i][j].Blue = buffer[0];
+      }
+    }
+  }
+*/
 
 
   return 0;
 
+}
+int average(Pixel ** pix_array,int r,int c){
+
+  unsigned int sum,average;
+
+  for(int i = r;i < r+4;++i){
+    for(int j = j;j < c+8;++j){
+      sum += pix_array[r][j].avg;
+      printf("Sum: %d\n",sum);
+    }
+  }
+  average = (sum/32);
+
+  return average;
+  
 }
