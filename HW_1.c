@@ -23,7 +23,8 @@ int main(int argc, char * argv[]){
   char buffer[250];
   FILE * fptr = fopen("IMG_7331_asc.ppm","rb");
 
-  unsigned int x,y,color_val,rel_Lumin;
+  unsigned int x,y,color_val,dist_hold;
+  unsigned char rel_Lumin;
 
   if(!fptr)
     exit(1);
@@ -68,6 +69,8 @@ int main(int argc, char * argv[]){
   }
   rel_Lumin = rel_loom(average(pix_array,0,0));
   printf("Relative Luminance: %d\n",rel_Lumin);
+  dist_hold = e_distance(average(pix_array,0,0));
+  printf("Eucledian Distance: %d\n",dist_hold);
 
 /*  else if(strncmp(file_type,"P6",2)== 0){
      printf("Binary Array \n");
@@ -91,20 +94,24 @@ int main(int argc, char * argv[]){
 // Calculates Euclidean Distance returns color val
 int e_distance(Pixel * hold_pix){
 
-  unsigned int smallest,compare,color_hold;
 
+  int smallest = 0;
+  int compare = 0;
+  int color_hold = 0;
 
   // 1 - BrightBlue
   smallest = sqrt((pow((hold_pix->Red),2)) + (pow((hold_pix->Green),2)) + (pow(255-(hold_pix->Blue),2)));
   color_hold = 1;
   // 2 - BrightGreen
-  compare = sqrt((pow((255-hold_pix->Red),2)) + (pow((hold_pix->Green),2)) + (pow((hold_pix->Blue),2)));
+  compare = sqrt((pow((hold_pix->Red),2)) + (pow((255-hold_pix->Green),2)) + (pow((hold_pix->Blue),2)));
+  printf("Compare: %d\n",compare);
+  printf("Smallest: %d\n",smallest);
   if(compare < smallest){
     smallest = compare;
     color_hold = 2;
   }
   // 3 - BrightCyan
-  compare = sqrt((pow((255-hold_pix->Red),2)) + (pow((hold_pix->Green),2)) + (pow((hold_pix->Blue),2)));
+  compare = sqrt((pow((hold_pix->Red),2)) + (pow((255-hold_pix->Green),2)) + (pow((255-hold_pix->Blue),2)));
   if(compare < smallest){
     smallest = compare;
     color_hold = 3;
@@ -116,19 +123,19 @@ int e_distance(Pixel * hold_pix){
     color_hold = 4;
   }
   // 5 - BrightMagenta
-  compare = sqrt((pow((255-hold_pix->Red),2)) + (pow((hold_pix->Green),2)) + (pow((hold_pix->Blue),2)));
+  compare = sqrt((pow((255-hold_pix->Red),2)) + (pow((hold_pix->Green),2)) + (pow((255-hold_pix->Blue),2)));
   if(compare < smallest){
     smallest = compare;
     color_hold = 5;
   }
   // 6 - BrightYellow
-  compare = sqrt((pow((255-hold_pix->Red),2)) + (pow((hold_pix->Green),2)) + (pow((hold_pix->Blue),2)));
+  compare = sqrt((pow((255-hold_pix->Red),2)) + (pow((255-hold_pix->Green),2)) + (pow((hold_pix->Blue),2)));
   if(compare < smallest){
     smallest = compare;
     color_hold = 6;
   }
   // 7 - BrightWhite
-  compare = sqrt((pow((255-hold_pix->Red),2)) + (pow((hold_pix->Green),2)) + (pow((hold_pix->Blue),2)));
+  compare = sqrt((pow((255-hold_pix->Red),2)) + (pow((255-hold_pix->Green),2)) + (pow((255-hold_pix->Blue),2)));
   if(compare < smallest){
     smallest = compare;
     color_hold = 7;
@@ -146,23 +153,28 @@ char rel_loom(Pixel * hold_pix){
   return Y;
 
 }
-Pixel * average(Pixel ** pix_array,int r,int c){
+Pixel * average(Pixel ** pix_array,int col,int row){
 
-  unsigned int sum_r,sum_b,sum_g;
+  int sum_r = 0;
+  int sum_b = 0;
+  int sum_g = 0;
+  
   unsigned int average_r,average_b,average_g;
   Pixel * hold_pix = (Pixel*)malloc(sizeof(Pixel));
 
-  for(int i = r;i < r+4;++i){
-    for(int j = j;j < c+8;++j){
-      sum_r += pix_array[r][j].Red;
-      sum_g += pix_array[r][j].Green;
-      sum_b += pix_array[r][j].Blue;
-      printf("Sum R: %d\n",sum_r);
+  for(int i = row;i < row+8;++i){
+    for(int j = col;j < col+4;++j){
+      sum_r += pix_array[col][row].Red;
+      sum_g += pix_array[col][row].Green;
+      sum_b += pix_array[col][row].Blue;
+     /* printf("Sum R: %d\n",sum_r);
       printf("Sum B: %d\n",sum_b);
       printf("Sum G: %d\n",sum_g);
+      */
     }
   }
   average_r = (sum_r/32);
+  printf("Avg R: %d\n",average_r);
   hold_pix->Red = average_r;
   average_g = (sum_g/32);
   hold_pix->Green = average_g;
