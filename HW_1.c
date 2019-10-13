@@ -9,7 +9,8 @@
 #define MAX_COLOR 255
 //#include "IMG_7331_asc.ppm"
 
-int rel_loom(Pixel * hold_pix);
+int e_distance(Pixel * hold_pix); 
+char rel_loom(Pixel * hold_pix);
 Pixel * average(Pixel ** pix_array,int c,int r);
 
 int main(int argc, char * argv[]){
@@ -87,10 +88,58 @@ int main(int argc, char * argv[]){
   return 0;
 
 }
-//  takes a Pixel pointer and computes the Relative Luminance
-int rel_loom(Pixel * hold_pix){
+// Calculates Euclidean Distance returns color val
+int e_distance(Pixel * hold_pix){
 
-  unsigned int Y;
+  unsigned int smallest,compare,color_hold;
+
+
+  // 1 - BrightBlue
+  smallest = sqrt((pow((hold_pix->Red),2)) + (pow((hold_pix->Green),2)) + (pow(255-(hold_pix->Blue),2)));
+  color_hold = 1;
+  // 2 - BrightGreen
+  compare = sqrt((pow((255-hold_pix->Red),2)) + (pow((hold_pix->Green),2)) + (pow((hold_pix->Blue),2)));
+  if(compare < smallest){
+    smallest = compare;
+    color_hold = 2;
+  }
+  // 3 - BrightCyan
+  compare = sqrt((pow((255-hold_pix->Red),2)) + (pow((hold_pix->Green),2)) + (pow((hold_pix->Blue),2)));
+  if(compare < smallest){
+    smallest = compare;
+    color_hold = 3;
+  }
+  // 4 - BrightRed
+  compare = sqrt((pow((255-hold_pix->Red),2)) + (pow((hold_pix->Green),2)) + (pow((hold_pix->Blue),2)));
+  if(compare < smallest){
+    smallest = compare;
+    color_hold = 4;
+  }
+  // 5 - BrightMagenta
+  compare = sqrt((pow((255-hold_pix->Red),2)) + (pow((hold_pix->Green),2)) + (pow((hold_pix->Blue),2)));
+  if(compare < smallest){
+    smallest = compare;
+    color_hold = 5;
+  }
+  // 6 - BrightYellow
+  compare = sqrt((pow((255-hold_pix->Red),2)) + (pow((hold_pix->Green),2)) + (pow((hold_pix->Blue),2)));
+  if(compare < smallest){
+    smallest = compare;
+    color_hold = 6;
+  }
+  // 7 - BrightWhite
+  compare = sqrt((pow((255-hold_pix->Red),2)) + (pow((hold_pix->Green),2)) + (pow((hold_pix->Blue),2)));
+  if(compare < smallest){
+    smallest = compare;
+    color_hold = 7;
+  }
+
+  return color_hold;
+}
+//  takes a Pixel pointer and computes the Relative Luminance
+char rel_loom(Pixel * hold_pix){
+
+  unsigned char Y;
 
   Y = ((0.21*hold_pix->Red)+(0.71*hold_pix->Green)+(0.8*hold_pix->Blue));
 
