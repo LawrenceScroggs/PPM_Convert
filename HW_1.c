@@ -23,8 +23,7 @@ int main(int argc, char * argv[]){
   char buffer[250];
   FILE * fptr = fopen("IMG_7331_asc.ppm","rb");
 
-  unsigned int x,y,color_val,dist_hold;
-  unsigned char rel_Lumin;
+  unsigned int x,y,color_val;
 
   if(!fptr)
     exit(1);
@@ -67,10 +66,14 @@ int main(int argc, char * argv[]){
       }
     }
   }
-  rel_Lumin = rel_loom(average(pix_array,0,0));
-  printf("Relative Luminance: %d\n",rel_Lumin);
-  dist_hold = e_distance(average(pix_array,0,0));
-  printf("Eucledian Distance: %d\n",dist_hold);
+
+  for(int i = 0;i < x; i+=4){
+    for(int j = 0;j < y; j+=8){
+      PrintASCIIChar(e_distance(average(pix_array,i,j)),rel_loom(average(pix_array,i,j)));
+    }
+  }
+
+     // printf("Eucledian Distance: %d\n",dist_hold);
 
 /*  else if(strncmp(file_type,"P6",2)== 0){
      printf("Binary Array \n");
@@ -97,33 +100,35 @@ int e_distance(Pixel * hold_pix){
 
   int smallest = 0;
   int compare = 0;
-  int color_hold = 0;
+  int color_hold;
 
   // 1 - BrightBlue
   smallest = sqrt((pow((hold_pix->Red),2)) + (pow((hold_pix->Green),2)) + (pow(255-(hold_pix->Blue),2)));
   color_hold = 1;
   // 2 - BrightGreen
   compare = sqrt((pow((hold_pix->Red),2)) + (pow((255-hold_pix->Green),2)) + (pow((hold_pix->Blue),2)));
+  /*
   printf("Compare: %d\n",compare);
   printf("Smallest: %d\n",smallest);
+  */
   if(compare < smallest){
     smallest = compare;
     color_hold = 2;
   }
   // 3 - BrightCyan
-  compare = sqrt((pow((hold_pix->Red),2)) + (pow((255-hold_pix->Green),2)) + (pow((255-hold_pix->Blue),2)));
+  compare = sqrt((pow(hold_pix->Red,2)) + (pow((255-hold_pix->Green),2)) + (pow((255-hold_pix->Blue),2)));
   if(compare < smallest){
     smallest = compare;
     color_hold = 3;
   }
   // 4 - BrightRed
-  compare = sqrt((pow((255-hold_pix->Red),2)) + (pow((hold_pix->Green),2)) + (pow((hold_pix->Blue),2)));
+  compare = sqrt((pow((255-hold_pix->Red),2)) + (pow(hold_pix->Green,2)) + (pow(hold_pix->Blue,2)));
   if(compare < smallest){
     smallest = compare;
     color_hold = 4;
   }
   // 5 - BrightMagenta
-  compare = sqrt((pow((255-hold_pix->Red),2)) + (pow((hold_pix->Green),2)) + (pow((255-hold_pix->Blue),2)));
+  compare = sqrt((pow((255-hold_pix->Red),2)) + (pow(hold_pix->Green,2)) + (pow((255-hold_pix->Blue),2)));
   if(compare < smallest){
     smallest = compare;
     color_hold = 5;
@@ -141,12 +146,14 @@ int e_distance(Pixel * hold_pix){
     color_hold = 7;
   }
 
+  printf("Color: %d",color_hold);
+
   return color_hold;
 }
 //  takes a Pixel pointer and computes the Relative Luminance
 char rel_loom(Pixel * hold_pix){
 
-  unsigned char Y;
+  char Y;
 
   Y = ((0.21*hold_pix->Red)+(0.71*hold_pix->Green)+(0.8*hold_pix->Blue));
 
@@ -174,7 +181,7 @@ Pixel * average(Pixel ** pix_array,int col,int row){
     }
   }
   average_r = (sum_r/32);
-  printf("Avg R: %d\n",average_r);
+ // printf("Avg R: %d\n",average_r);
   hold_pix->Red = average_r;
   average_g = (sum_g/32);
   hold_pix->Green = average_g;
