@@ -9,6 +9,9 @@
 #define MAX_COLOR 255
 //#include "IMG_7331_asc.ppm"
 
+int rel_loom(Pixel * hold_pix);
+Pixel * average(Pixel ** pix_array,int c,int r);
+
 int main(int argc, char * argv[]){
 
   printf("hello again \n\n");
@@ -19,7 +22,7 @@ int main(int argc, char * argv[]){
   char buffer[250];
   FILE * fptr = fopen("IMG_7331_asc.ppm","rb");
 
-  unsigned int x,y,color_val;
+  unsigned int x,y,color_val,rel_Lumin;
 
   if(!fptr)
     exit(1);
@@ -62,6 +65,9 @@ int main(int argc, char * argv[]){
       }
     }
   }
+  rel_Lumin = rel_loom(average(pix_array,0,0));
+  printf("Relative Luminance: %d\n",rel_Lumin);
+
 /*  else if(strncmp(file_type,"P6",2)== 0){
      printf("Binary Array \n");
      for(int i = 0;i < x;++i){
@@ -81,18 +87,40 @@ int main(int argc, char * argv[]){
   return 0;
 
 }
-int average(Pixel ** pix_array,int r,int c){
+//  takes a Pixel pointer and computes the Relative Luminance
+int rel_loom(Pixel * hold_pix){
 
-  unsigned int sum,average;
+  unsigned int Y;
+
+  Y = ((0.21*hold_pix->Red)+(0.71*hold_pix->Green)+(0.8*hold_pix->Blue));
+
+  return Y;
+
+}
+Pixel * average(Pixel ** pix_array,int r,int c){
+
+  unsigned int sum_r,sum_b,sum_g;
+  unsigned int average_r,average_b,average_g;
+  Pixel * hold_pix = (Pixel*)malloc(sizeof(Pixel));
 
   for(int i = r;i < r+4;++i){
     for(int j = j;j < c+8;++j){
-      sum += pix_array[r][j].avg;
-      printf("Sum: %d\n",sum);
+      sum_r += pix_array[r][j].Red;
+      sum_g += pix_array[r][j].Green;
+      sum_b += pix_array[r][j].Blue;
+      printf("Sum R: %d\n",sum_r);
+      printf("Sum B: %d\n",sum_b);
+      printf("Sum G: %d\n",sum_g);
     }
   }
-  average = (sum/32);
+  average_r = (sum_r/32);
+  hold_pix->Red = average_r;
+  average_g = (sum_g/32);
+  hold_pix->Green = average_g;
+  average_b = (sum_b/32);
+  hold_pix->Blue = average_b;
 
-  return average;
+
+  return hold_pix;
   
 }
