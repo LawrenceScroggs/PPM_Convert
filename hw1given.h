@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <math.h>
+#include <string.h>
 
 //ASCII LUMINANCE RAMP
 #define ASCII_MAP_STRING "    ...''`^\",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%BB@@@$$$$"
@@ -26,7 +27,6 @@ typedef struct Pixel
 	unsigned char Green;
 	unsigned char Blue;
 
-  unsigned int avg;
 } Pixel;
 
 //THIS ARRAY OF PIXELS SPECIFIES EACH OF THE COLORS AVAILABLE IN ANSI. EACH COLOR IS INDEXED BY ENUM ANSI_COLOR ABOVE
