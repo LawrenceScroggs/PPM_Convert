@@ -17,10 +17,12 @@ int main(int argc, char * argv[]){
   printf("hello again \n\n");
   char * file_type = (char*)malloc(sizeof(char*)*2);
   char * hold;
+
   Pixel ** pix_array;
   
   char buffer[250];
-  FILE * fptr = fopen("DSC_0026b_asc.ppm","rb");
+
+  FILE * fptr = fopen("DSC_0026b_bin.ppm","rb");
 
   unsigned int x,y,color_val;
   unsigned char a_char;
@@ -67,8 +69,19 @@ int main(int argc, char * argv[]){
       }
     }
   }
+  else if(strncmp(file_type,"P6",2)== 0){
+    printf("Binary Array \n");
+    for(int i = 0;i < x;++i){
+      for(int j = 0;j < y;++j){
+        fread(&pix_array[i][j].Red,sizeof(char),1,fptr);
+        fread(&pix_array[i][j].Green,sizeof(char),1,fptr);
+        fread(&pix_array[i][j].Blue,sizeof(char),1,fptr);
+      }
+    }
+  }
   //check values of img
-  /*for(int i = 0; i < x; ++i){
+  /*
+  for(int i = 0; i < x; ++i){
     for(int j = 0; i < y;++i){
       printf("R: %d G: %d B: %d\n",pix_array[i][j].Red,pix_array[i][j].Green,pix_array[i][j].Blue);
     }
@@ -91,22 +104,6 @@ int main(int argc, char * argv[]){
 
     printf("\n");
 
-     // printf("Eucledian Distance: %d\n",dist_hold);
-
-/*  else if(strncmp(file_type,"P6",2)== 0){
-     printf("Binary Array \n");
-     for(int i = 0;i < x;++i){
-      for(int j = 0;j < y;++j){
-        fread(buffer,sizeof(buffer),fptr);
-        pix_array[i][j].Red = buffer[0];
-        fgets(buffer,sizeof(buffer),fptr);
-        pix_array[i][j].Green = buffer[0];
-        fgets(buffer,sizeof(buffer),fptr);
-        pix_array[i][j].Blue = buffer[0];
-      }
-    }
-  }
-*/
 
 
   return 0;
